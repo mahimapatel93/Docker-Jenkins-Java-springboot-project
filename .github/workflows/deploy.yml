@@ -65,4 +65,4 @@ jobs:
           echo "📦 Running containers:"
           sudo docker ps
         
-          echo "✅ Deployment complete"
+          echo "✅ Deployment completed"
