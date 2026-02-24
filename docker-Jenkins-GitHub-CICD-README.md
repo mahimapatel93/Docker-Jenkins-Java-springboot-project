@@ -19,6 +19,10 @@ Frontend communicates with backend using Docker network hostname.
 
 ---
 
+## intall git and clone repo
+    yum install git
+    git clone https://github.com/mahimapatel93/Docker-Jenkins-Java-springboot-project.git
+
 ## STEP 0 — Fix Frontend (VERY IMPORTANT)
 
 Open:
@@ -46,6 +50,12 @@ Change:
     ENV SPRING_JPA_HIBERNATE_DDL_AUTO="update"
     ENV SERVER_PORT=8084
     Commit and push to GitHub.
+
+  ## Commit & Push
+      git add .
+      git commit -m "Fixed repo"
+      git push
+    
 
 Reason: Containers must communicate via container name inside Docker network, not EC2 IP.
 
