@@ -32,8 +32,20 @@ Change:
 Replace with:
 
     ENV API_URL=http://backend:8084
+    
+Fix backend (VERY IMPORTANT)
+open:
+      
+    backend/Dockerfile
+    
+Change:
 
-Commit and push to GitHub.
+    ENV SPRING_DATASOURCE_URL="jdbc:mysql://database-1.cgfce626af0y.us-east-1.rds.amazonaws.com:3306/datastore?createDatabaseIfNotExist=true"
+    ENV SPRING_DATASOURCE_USERNAME="admin"
+    ENV SPRING_DATASOURCE_PASSWORD="mahima123"
+    ENV SPRING_JPA_HIBERNATE_DDL_AUTO="update"
+    ENV SERVER_PORT=8084
+    Commit and push to GitHub.
 
 Reason: Containers must communicate via container name inside Docker network, not EC2 IP.
 
