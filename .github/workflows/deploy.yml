@@ -26,7 +26,7 @@ jobs:
             # Clone if not exists
             if [ ! -d ".git" ]; then
               echo "📥 Cloning repository..."
-              git clone https://github.com/mahimapatel93/Docker-Jenkins-Java-springboot-project.git .
+              git clone https://github.com/mahimapatel93/Docker-Jenkins-Java-springboot-project.git
             else
               echo "📥 Pulling latest code..."
               git fetch --all
