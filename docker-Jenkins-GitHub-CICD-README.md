@@ -43,8 +43,8 @@ Reason: Containers must communicate via container name inside Docker network, no
 
 SSH into Jenkins machine:
 
-    sudo apt update
-    sudo apt install docker.io -y
+    sudo yum update
+    sudo yum install docker.io -y
 
 Give Jenkins permission:
 
@@ -81,7 +81,7 @@ SCM:
 
 Repository URL:
 
-    https://github.com/bhawnavishwakarma007/Java-springboot-project-docker-jenkins.git
+    https://github.com/mahimapatel93/Docker-Jenkins-Java-springboot-project.git
 
 Branch:
 
