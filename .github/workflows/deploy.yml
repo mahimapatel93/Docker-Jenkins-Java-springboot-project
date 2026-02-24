@@ -1,68 +1,75 @@
 name: Deploy to EC2 via SSH
 
 on:
-  workflow_dispatch: 
-  #push:
-    #branches: [ "main" ]
+  workflow_dispatch:
+  # push:
+  #   branches: [ "main" ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Deploy Application
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            echo "🚀 Starting deployment"
 
-    - name: Deploy Application
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          echo "🚀 Starting deployment"
-        
-          cd ${{ secrets.APP_PATH }}
-        
-          echo "📂 Current files:"
-          ls -la
-        
-          echo "📥 Pull latest code"
-          git fetch --all
-          git reset --hard origin/main
-        
-          echo "🐳 Build backend"
-          cd backend
-          ls
-          sudo docker build -t springboot-backend .
-          cd ..
-        
-          echo "🐳 Build frontend"
-          cd frontend
-          ls
-          sudo docker build -t streamlit-frontend .
-          cd ..
-        
-          echo "🌐 Create network"
-          sudo docker network create app-network || true
-        
-          echo "🛑 Stop old containers"
-          sudo docker rm -f backend || true
-          sudo docker rm -f frontend || true
-        
-          echo "▶️ Start backend"
-          sudo docker run -d \
-            --name backend \
-            --network app-network \
-            -p 8084:8084 \
-            springboot-backend
-        
-          echo "▶️ Start frontend"
-          sudo docker run -d \
-            --name frontend \
-            --network app-network \
-            -p 8501:8501 \
-            streamlit-frontend
-        
-          echo "📦 Running containers:"
-          sudo docker ps
-        
-          echo "✅ Deployment completed"
+            mkdir -p ${{ secrets.APP_PATH }}
+            cd ${{ secrets.APP_PATH }}
+
+            # Clone if not exists
+            if [ ! -d ".git" ]; then
+              echo "📥 Cloning repository..."
+              git clone https://github.com/mahimapatel93/Docker-Jenkins-Java-springboot-project.git .
+            else
+              echo "📥 Pulling latest code..."
+              git fetch --all
+              git reset --hard origin/main
+            fi
+
+            echo "🐳 Build backend"
+            cd backend
+            sudo docker build -t springboot-backend .
+            cd ..
+
+            echo "🐳 Build frontend"
+            cd frontend
+            sudo docker build -t streamlit-frontend .
+            cd ..
+
+            echo "🌐 Create network"
+            sudo docker network inspect app-network >/dev/null 2>&1 || sudo docker network create app-network
+
+            echo "🛑 Stop old containers"
+            sudo docker rm -f backend || true
+            sudo docker rm -f frontend || true
+
+            echo "▶️ Start backend"
+            sudo docker run -d \
+              --name backend \
+              --network app-network \
+              --restart unless-stopped \
+              -p 8084:8084 \
+              springboot-backend
+
+            echo "▶️ Start frontend"
+            sudo docker run -d \
+              --name frontend \
+              --network app-network \
+              --restart unless-stopped \
+              -p 8501:8501 \
+              streamlit-frontend
+
+            echo "🧹 Cleaning unused images"
+            sudo docker image prune -f
+
+            echo "📦 Running containers:"
+            sudo docker ps
+
+            echo "✅ Deployment completed successfully"
