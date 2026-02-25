@@ -61,7 +61,9 @@ Verify:
 
     git --version
     docker --version
-    
+## craete RDS DATABSE 
+    change RDS endpoint and password in backend dockerfile
+    inside SG port should be enable custom TCP :3306 
 
 ## intall git and clone repo
     yum install git
