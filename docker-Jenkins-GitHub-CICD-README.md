@@ -19,6 +19,50 @@ Frontend communicates with backend using Docker network hostname.
 
 ---
 
+## 🖥️ EC2 Server Initial Setup (One-Time Setup)
+
+Before running Jenkins or GitHub Actions deployment,
+install required tools on EC2.
+
+SSH into EC2:
+
+    ssh ec2-user@<EC2-PUBLIC-IP>
+
+Update system:
+
+    sudo yum update -y
+
+Install Git:
+
+    sudo yum install git -y
+
+Install Docker:
+
+    sudo yum install docker -y
+
+Start Docker:
+
+    sudo systemctl start docker
+
+Enable Docker on boot:
+
+    sudo systemctl enable docker
+
+Give ec2-user Docker permission:
+
+    sudo usermod -aG docker ec2-user
+
+Logout and login again:
+
+    exit
+    ssh ec2-user@<EC2-PUBLIC-IP>
+
+Verify:
+
+    git --version
+    docker --version
+    
+
 ## intall git and clone repo
     yum install git
     git clone https://github.com/mahimapatel93/Docker-Jenkins-Java-springboot-project.git
